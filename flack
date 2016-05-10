@@ -1,0 +1,18 @@
+#!/bin/bash
+# needs shnsplit, cuetools, and flac
+
+function flac_split {
+  cue_name=$(basename "$1")
+  flac_name="$(basename "$1" .cue).flac"
+  output_dir="split"
+  mkdir "$output_dir"
+  shnsplit -f "$cue_name" -t %n-%t -d $output_dir -o flac "$flac_name"
+  cuetag "$cue_name" $output_dir/*.flac
+}
+
+for cue_file in **/*.cue; do
+  music_dir=$(dirname "${cue_file}")
+  echo "entering directory: $music_dir"
+  cd "$music_dir"
+  flac_split "$cue_file"
+done
