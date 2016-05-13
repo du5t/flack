@@ -16,8 +16,22 @@ so if you have a lot of files that look like
 `music/big_flac_album/big_flac_album.flac`, you will get a lot of folders that
 look like `music/big_flac_album/split/big_flac_album/01-first-flac-track.flac`.
 
+at this point it then converts all of them to variable bitrate AAC.
+
 # dependencies
 
-- shnsplit
+- shntool
 - cuetools
 - flac
+- libav
+
+# how to use
+
+1. copy [script](./flack) to someplace on your `$PATH`, or a directory where you
+   want to use it--anywhere above your big FLAC/CUE pairs is fine
+2. install dependencies: `brew install DEPENDENCY` or `apt-get install
+   DEPENDENCY`
+2. `chmod +x flack`
+3. ./flack
+4. wait
+5. relax
