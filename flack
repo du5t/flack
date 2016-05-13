@@ -1,18 +1,29 @@
 #!/bin/bash
 # needs shnsplit, cuetools, and flac
 
-function flac_split {
+function flac_to_aac {
+  input_file=$1
+  output_file="$(basename "$input_file" .flac).m4a"
+  echo "converting $input_file to m4a (AAC)..."
+  avconv -i "$input_file" -acodec aac -strict experimental "split/$output_file" -map_metadata "$input_file":"split/$output_file"
+}
+
+function flac_split_to_aac {
   cue_name=$(basename "$1")
   flac_name="$(basename "$1" .cue).flac"
   output_dir="split"
   mkdir "$output_dir"
-  shnsplit -f "$cue_name" -t %n-%t -d $output_dir -o flac "$flac_name"
-  cuetag "$cue_name" $output_dir/*.flac
+  shnsplit -f "$cue_name" -t %n-%t -d $output_dir -o flac "$flac_name" &&
+    cuetag "$cue_name" $output_dir/*.flac &&
+    for flac_file in $output_dir/*.flac; do
+      flac_to_aac "$flac_file"
+    done
+    rm $output_dir/*.flac
 }
 
 for cue_file in **/*.cue; do
   music_dir=$(dirname "${cue_file}")
-  echo "entering directory: $music_dir"
+  echo "entering directory: $music_dir..."
   cd "$music_dir"
-  flac_split "$cue_file"
+  flac_split_to_aac "$cue_file"
 done
