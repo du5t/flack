@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # needs shnsplit, cuetools, and flac
 
 function flac_to_aac {
